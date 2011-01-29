@@ -65,6 +65,7 @@ function init() {
     world = new b2World( worldAABB, new b2Vec2( 0, 0 ), true );
 
     setWalls();
+    createSlingshotCanvas();
     reset();
 }
 
@@ -104,10 +105,51 @@ function reset() {
     createRect(800 + (50/2), stage[3] - (h2/2), 50,h2);
     createRect(850 + (250/2), stage[3] - (h/2), 250, h);
     createRect(1100 + (50/2), stage[3] - (h2/2), 50, h2);
+    
+    createRect(400 + (50/2), stage[3] - (200/2), 50, 200);
 	
 	createBall(900, stage[3] - h2);
 	createBall(975, stage[3] - h2);
 	createBall(1050, stage[3] - h2);
+}
+
+function createSlingshotCanvas() {
+    var element = document.createElement("canvas");
+    element.setAttribute("id", "slingshot-canvas");
+    element.width = stage[2];
+    element.height = stage[3];
+//    element.style['bottom'] = '0px';
+    element.style['position'] = 'absolute';
+    element.style['z-index'] = -5;
+//    element.style['left'] = -200 + 'px';
+//    element.style['top'] = -200 + 'px';
+
+    var graphics = element.getContext("2d");
+
+    graphics.fillStyle = 'black';
+    graphics.fillRect(0, 0, stage[2], stage[3]);
+    
+    element.addEventListener('mousemove', mouseOverCanvas, false);
+    document.getElementById('canvas').appendChild(element);
+    
+}
+
+function mouseOverCanvas(event) {
+	var graphics = document.getElementById('slingshot-canvas').getContext("2d");
+	graphics.fillStyle = 'black';
+	graphics.fillRect(0, 0, stage[2], stage[3]);
+	var x = event.pageX;
+	var y = event.pageY;
+	
+	graphics.strokeStyle = 'white';
+    	graphics.beginPath();
+    	graphics.moveTo(400, 100);
+    	graphics.lineTo(x, y);
+    	graphics.stroke();
+
+    	graphics.moveTo(450, 150);
+    	graphics.lineTo(x, y);
+    	graphics.stroke();
 }
 
 //

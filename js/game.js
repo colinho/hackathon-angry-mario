@@ -98,16 +98,16 @@ function reset() {
 
     createAvatar();
 	
-	var h = 80;
-	var h2 = 100;
+	var h = 100;
+	var h2 = 115;
 
-    createRect(500 + (50/2), stage[3] - (h2/2), 50,h2);
-    createRect(550 + (250/2), stage[3] - (h/2), 250, h);
-    createRect(800 + (50/2), stage[3] - (h2/2), 50, h2);
+    createRect(800 + (50/2), stage[3] - (h2/2), 50,h2);
+    createRect(850 + (250/2), stage[3] - (h/2), 250, h);
+    createRect(1100 + (50/2), stage[3] - (h2/2), 50, h2);
 	
-	createBall(600, stage[3] - h2);
-	createBall(675, stage[3] - h2);
-	createBall(750, stage[3] - h2);
+	createBall(900, stage[3] - h2);
+	createBall(975, stage[3] - h2);
+	createBall(1050, stage[3] - h2);
 }
 
 //

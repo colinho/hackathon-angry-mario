@@ -22,10 +22,10 @@ var avatarColor = "#FF0000";
 var wallColor = "#BDB76B";
 var enemyColor = "#1E90FF";
 
-var worldAABB, world, iterations = 1, timeStep = 1 / 20;
+var worldAABB, world, iterations = 1, timeStep = 1 / 40;
 
 var walls = [];
-var wall_thickness = 200;
+var wall_thickness = 5000;
 var wallsSetted = false;
 
 var bodies, elements, text;

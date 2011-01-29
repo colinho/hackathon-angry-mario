@@ -336,11 +336,13 @@ function createBall( x, y, size ) {
 
     var num_circles = Math.random() * 10 >> 0;
 
-    graphics.fillStyle = enemyColor;
-    graphics.beginPath();
-    graphics.arc( size * .5, size * .5, size * .5, 0, PI2, true );
-    graphics.closePath();
-    graphics.fill();
+	var image = document.getElementById("peach");
+	graphics.drawImage(image, 0, 0);
+    //graphics.fillStyle = enemyColor;
+    //graphics.beginPath();
+    //graphics.arc( size * .5, size * .5, size * .5, 0, PI2, true );
+    //graphics.closePath();
+    //graphics.fill();
 	
     canvas.appendChild(element);
 

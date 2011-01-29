@@ -42,6 +42,16 @@ var PI2 = Math.PI * 2;
 
 var timeOfLastTouch = 0;
 
+// Slinghshot stuff
+var ssX = 150;
+var ssH = 300;
+var ssNearX = ssX + 66;
+var ssNearY; // see reset
+var ssFarX = ssX + 130;
+var ssFarY; // see reset
+var ssMidX; // see reset
+var ssMidY; // see reset
+
 init();
 play();
 
@@ -70,7 +80,6 @@ function init() {
     reset();
 }
 
-
 function play() {
 
     setInterval( loop, 1000 / 40 );
@@ -98,7 +107,12 @@ function reset() {
     bodies = [];
     elements = [];
 
-    createAvatar();
+	ssNearY = stage[3] - ssH + 35;
+	ssFarY = stage[3] - ssH + 12;
+	ssMidX = (ssNearX + ssFarX) / 2;
+	ssMidY = (ssNearY + ssFarY) / 2;
+	
+    createAvatar(ssMidX, ssMidY);
 	
 	var h = 100;
 	var h2 = 115;
@@ -138,10 +152,10 @@ function onDocumentMouseUp(event) {
 		//var hackedForce = new b2Vec2(hackedForceX, hackedForceY ); 
 		//var mouseDownPoint = new b2Vec2(avatarMouseDownX, avatarMouseDownY);
 
-		var hackedForceX = (stage[0] + 250 - event.clientX) * 10000;
-		var hackedForceY = (stage[3] - 250 - event.clientY) * 10000;
+		var hackedForceX = (ssMidX - event.clientX) * 5000;
+		var hackedForceY = (ssMidY - event.clientY) * 5000;
 		var hackedForce = new b2Vec2(hackedForceX, hackedForceY ); 
-		var pointOfLaunch = new b2Vec2(stage[0] + 250, stage[3] - 250); 
+		var pointOfLaunch = new b2Vec2(ssMidX, ssMidY); 
 		body.ApplyImpulse(hackedForce, pointOfLaunch);
 	}
 
@@ -210,7 +224,7 @@ function onDocumentTouchEnd( event ) {
 
 //
 
-function createAvatar() {
+function createAvatar( x, y ) {
 
     var size = 50;
 
@@ -263,7 +277,7 @@ function createAvatar() {
     b2body.AddShape(circle);
     b2body.userData = {element: element};
 
-    b2body.position.Set(stage[0] + 250, stage[3] - 250 );
+    b2body.position.Set(x, y);
     //b2body.linearVelocity.Set( Math.random() * 400 - 200, Math.random() * 400 - 200 );
 	avatarBody	= world.CreateBody(b2body);
     bodies.push(avatarBody ); 

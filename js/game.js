@@ -275,14 +275,17 @@ function createAvatar( x, y ) {
 
     var graphics = circle.getContext( '2d' );
 
-    graphics.fillStyle = avatarColor;
-    graphics.beginPath();
-    graphics.arc( size * .5, size * .5, size * .5, 0, PI2, true );
-    graphics.closePath();
-    graphics.fill();
+	var image = document.getElementById("mario");
+	graphics.drawImage(image, 0, 0);
+    //graphics.fillStyle = avatarColor;
+    //graphics.beginPath();
+    //graphics.arc( size * .5, size * .5, size * .5, 0, PI2, true );
+    //graphics.closePath();
+    //graphics.fill();
 
     element.appendChild( circle );
 
+	/*
     text = document.createElement( 'div' );
     text.onSelectStart = null;
     text.innerHTML = '<span style="color:yellow;font-size:12px;">ANGRY!</span>';
@@ -296,6 +299,7 @@ function createAvatar( x, y ) {
 
     text.style.left = ((size - text.clientWidth) / 2) +'px';
     text.style.top = ((size - text.clientHeight) / 2) +'px'; 
+	*/
 
     var b2body = new b2BodyDef();
 

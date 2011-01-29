@@ -80,6 +80,7 @@ function init() {
     world = new b2World( worldAABB, new b2Vec2( 0, 0 ), true );
 
     setWalls();
+    createSlingshotCanvas();
     reset();
 }
 
@@ -115,7 +116,16 @@ function reset() {
 	ssMidX = (ssNearX + ssFarX) / 2;
 	ssMidY = (ssNearY + ssFarY) / 2;
 	
+
+	var h = 100;
+	var h2 = 115;
+
+    createRect(800 + (50/2), stage[3] - (h2/2), 50,h2);
+    createRect(850 + (250/2), stage[3] - (h/2), 250, h);
+    createRect(1100 + (50/2), stage[3] - (h2/2), 50, h2);
+
     createAvatar(ssMidX, ssMidY);
+
 	
 	if (maxLevel < ++level) level = 0;
 	if (level == 0) {
@@ -152,6 +162,45 @@ function reset() {
 		createBall(975, stage[3] - h - 50/2);
 		createBall(1050, stage[3] - h - 50/2);
 	}
+}
+
+function createSlingshotCanvas() {
+    var element = document.createElement("canvas");
+    element.setAttribute("id", "slingshot-canvas");
+    element.width = stage[2];
+    element.height = stage[3];
+//    element.style['bottom'] = '0px';
+    element.style['position'] = 'absolute';
+    element.style['z-index'] = -5;
+//    element.style['left'] = -200 + 'px';
+//    element.style['top'] = -200 + 'px';
+
+    var graphics = element.getContext("2d");
+
+    graphics.fillStyle = 'black';
+    graphics.fillRect(0, 0, stage[2], stage[3]);
+    
+    element.addEventListener('mousemove', mouseOverCanvas, false);
+    document.getElementById('canvas').appendChild(element);
+    
+}
+
+function mouseOverCanvas(event) {
+	var graphics = document.getElementById('slingshot-canvas').getContext("2d");
+	graphics.fillStyle = 'black';
+	graphics.fillRect(0, 0, stage[2], stage[3]);
+	var x = event.pageX;
+	var y = event.pageY;
+	
+	graphics.strokeStyle = 'white';
+    	graphics.beginPath();
+    	graphics.moveTo(ssNearX, ssNearY);
+    	graphics.lineTo(x, y);
+    	graphics.stroke();
+
+    	graphics.moveTo(ssFarX, ssFarY);
+    	graphics.lineTo(x, y);
+    	graphics.stroke();
 }
 
 //
@@ -352,7 +401,7 @@ function createBall( x, y, size ) {
 
     var circle = new b2CircleDef();
     circle.radius = size >> 1;
-    circle.density = 1;
+    circle.density = 0.0001;
     circle.friction = 0.3;
     circle.restitution = 0.3;
     b2body.AddShape(circle);
@@ -433,8 +482,8 @@ function loop() {
 
 		if (dontSpinWhenGrabbedFlag)
 		{
-			if (element.tagName == 'DIV') {
-
+			//if (element.tagName == 'DIV') {
+			{
 				var rotationStyle = 'rotate(' + (body.m_rotation0 * 57.2957795) + 'deg)';
 				element.style.WebkitTransform = rotationStyle;
 				element.style.MozTransform = rotationStyle;

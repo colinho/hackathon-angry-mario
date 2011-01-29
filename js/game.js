@@ -316,7 +316,7 @@ function createRect( x, y, w, h ) {
 
     var square = new b2BoxDef();
 	square.extents.Set(w/2, h/2);
-    square.density = 1;
+    square.density = 0;
     square.friction = 0.3;
     square.restitution = 0.3;
     b2body.AddShape(square);

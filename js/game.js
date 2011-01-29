@@ -162,6 +162,7 @@ function onDocumentMouseDown(event) {
 	var body = getBodyAtMouse();
 	if (body == avatarBody)
 	{
+		dontSpinWhenGrabbedFlag = false;
 		avatarMouseDownX = event.clientX;
 		avatarMouseDownY = event.clientY;
 	}
@@ -169,12 +170,13 @@ function onDocumentMouseDown(event) {
     isMouseDown = true;
     return false;
 }
-
+var dontSpinWhenGrabbedFlag = false;
 function onDocumentMouseUp(event) {
 
 	var body = getBodyAtMouse();
 	if (body == avatarBody)
 	{
+		dontSpinWhenGrabbedFlag = true;
 		//var hackedForceX = (avatarMouseDownX - event.clientX) * 10000;
 		//var hackedForceY = (avatarMouseDownY - event.clientY) * 10000;
 		//var hackedForce = new b2Vec2(hackedForceX, hackedForceY ); 
@@ -423,15 +425,18 @@ function loop() {
         element.style.left = (body.m_position0.x - (element.width >> 1)) + 'px';
         element.style.top = (body.m_position0.y - (element.height >> 1)) + 'px';
 
-        if (element.tagName != 'DIV') {
+		if (dontSpinWhenGrabbedFlag)
+		{
+			if (element.tagName == 'DIV') {
 
-            var rotationStyle = 'rotate(' + (body.m_rotation0 * 57.2957795) + 'deg)';
-            element.style.WebkitTransform = rotationStyle;
-            element.style.MozTransform = rotationStyle;
-            element.style.OTransform = rotationStyle;
-            // text.style.MsTransform = rotationStyle;
+				var rotationStyle = 'rotate(' + (body.m_rotation0 * 57.2957795) + 'deg)';
+				element.style.WebkitTransform = rotationStyle;
+				element.style.MozTransform = rotationStyle;
+				element.style.OTransform = rotationStyle;
+				// text.style.MsTransform = rotationStyle;
 
-        }
+			}
+		}
 
     }
 

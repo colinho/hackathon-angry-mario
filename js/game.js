@@ -454,7 +454,10 @@ function mouseDrag()
 
         if (body) {
 
-
+			// Checking for only the avatar here, prevents the user from mouse
+			// manipulating the other balls etc
+			if (body == avatarBody) 
+			{
 				var md = new b2MouseJointDef();
 				md.body1 = world.m_groundBody;
 				md.body2 = body;
@@ -463,6 +466,7 @@ function mouseDrag()
 				md.timeStep = timeStep;
 				mouseJoint = world.CreateJoint(md);
 				body.WakeUp();
+				}
 
         } else {
 

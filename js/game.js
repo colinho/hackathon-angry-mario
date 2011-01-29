@@ -16,8 +16,11 @@ var themes = [ [ "#10222B", "#95AB63", "#BDD684", "#E2F0D6", "#F6FFE0" ],
         [ "#333B3A", "#B4BD51", "#543B38", "#61594D", "#B8925A" ] ];
 var theme;
 
-var avatarColor = "#FF3333";
+
 var avatarBody;
+var avatarColor = "#FF0000";
+var wallColor = "#BDB76B";
+var enemyColor = "#1E90FF";
 
 var worldAABB, world, iterations = 1, timeStep = 1 / 20;
 
@@ -90,25 +93,29 @@ function reset() {
 
     // color theme
     theme = themes[ Math.random() * themes.length >> 0 ];
-    document.body.style[ 'backgroundColor' ] = theme[ 0 ];
+    document.body.style[ 'backgroundColor' ] = "#000000";
 
     bodies = [];
     elements = [];
 
     createAvatar();
+	
+	var h = 100;
+	var h2 = 115;
 
-    for( i = 0; i < 10; i++ ) {
-
-        createRect();
-
-    }
-
+    createRect(800 + (50/2), stage[3] - (h2/2), 50,h2);
+    createRect(850 + (250/2), stage[3] - (h/2), 250, h);
+    createRect(1100 + (50/2), stage[3] - (h2/2), 50, h2);
+	
+	createBall(900, stage[3] - h2);
+	createBall(975, stage[3] - h2);
+	createBall(1050, stage[3] - h2);
 }
 
 //
 var avatarMouseDownX;
 var avatarMouseDownY;
-function onDocumentMouseDown() {
+function onDocumentMouseDown(event) {
 
 	var body = getBodyAtMouse();
 	if (body == avatarBody)
@@ -121,18 +128,21 @@ function onDocumentMouseDown() {
     return false;
 }
 
-function onDocumentMouseUp() {
+function onDocumentMouseUp(event) {
 
 	var body = getBodyAtMouse();
 	if (body == avatarBody)
 	{
-		var hackedForceX = avatarMouseDownX - event.clientX * 10000;
-		var hackedForceY = avatarMouseDownY - event.clientY * 10000;
-		
+		//var hackedForceX = (avatarMouseDownX - event.clientX) * 10000;
+		//var hackedForceY = (avatarMouseDownY - event.clientY) * 10000;
+		//var hackedForce = new b2Vec2(hackedForceX, hackedForceY ); 
+		//var mouseDownPoint = new b2Vec2(avatarMouseDownX, avatarMouseDownY);
+
+		var hackedForceX = (stage[0] + 250 - event.clientX) * 10000;
+		var hackedForceY = (stage[3] - 250 - event.clientY) * 10000;
 		var hackedForce = new b2Vec2(hackedForceX, hackedForceY ); 
-		var bogus = new b2Vec2(avatarMouseDownX, avatarMouseDownY); 
-		body.ApplyImpulse(hackedForce, bogus);
-		//body.WakeUp( );
+		var pointOfLaunch = new b2Vec2(stage[0] + 250, stage[3] - 250); 
+		body.ApplyImpulse(hackedForce, pointOfLaunch);
 	}
 
     isMouseDown = false;
@@ -247,7 +257,7 @@ function createAvatar() {
 
     var circle = new b2CircleDef();
     circle.radius = size / 2;
-    circle.density = 0.9;
+    circle.density = 0.3;
     circle.friction = 0.3;
     circle.restitution = 0.3;
     b2body.AddShape(circle);
@@ -260,12 +270,12 @@ function createAvatar() {
 	// hack -remember the avatar so we can distinguish it in mouse hit tests
 }
 
-function createBall( x, y ) {
+function createBall( x, y, size ) {
 
     var x = x || Math.random() * stage[2];
     var y = y || Math.random() * -200;
 
-    var size = (Math.random() * 100 >> 0) + 20;
+    var size = size || 50;
 
     var element = document.createElement("canvas");
     element.width = size;
@@ -278,15 +288,12 @@ function createBall( x, y ) {
 
     var num_circles = Math.random() * 10 >> 0;
 
-    for (var i = size; i > 0; i-= (size/num_circles)) {
-
-        graphics.fillStyle = theme[ (Math.random() * 4 >> 0) + 1];
-        graphics.beginPath();
-        graphics.arc(size * .5, size * .5, i * .5, 0, PI2, true); 
-        graphics.closePath();
-        graphics.fill();
-    }
-
+    graphics.fillStyle = enemyColor;
+    graphics.beginPath();
+    graphics.arc( size * .5, size * .5, size * .5, 0, PI2, true );
+    graphics.closePath();
+    graphics.fill();
+	
     canvas.appendChild(element);
 
     elements.push( element );
@@ -302,7 +309,7 @@ function createBall( x, y ) {
     b2body.userData = {element: element};
 
     b2body.position.Set( x, y );
-    b2body.linearVelocity.Set( Math.random() * 400 - 200, Math.random() * 400 - 200 );
+    //b2body.linearVelocity.Set( Math.random() * 400 - 200, Math.random() * 400 - 200 );
     bodies.push( world.CreateBody(b2body) );
 }
 
@@ -325,7 +332,7 @@ function createRect( x, y, w, h ) {
 
     var num_circles = Math.random() * 10 >> 0;
 
-    graphics.fillStyle = theme[ (Math.random() * 4 >> 0) + 1];
+    graphics.fillStyle = wallColor;
     graphics.fillRect(0, 0, w, h);
 
     canvas.appendChild(element);
@@ -336,14 +343,14 @@ function createRect( x, y, w, h ) {
 
     var square = new b2BoxDef();
 	square.extents.Set(w/2, h/2);
-    square.density = 1;
+    square.density = 0;
     square.friction = 0.3;
     square.restitution = 0.3;
     b2body.AddShape(square);
     b2body.userData = {element: element};
 
     b2body.position.Set( x, y );
-    b2body.linearVelocity.Set( Math.random() * 400 - 200, Math.random() * 400 - 200 );
+    //b2body.linearVelocity.Set( Math.random() * 400 - 200, Math.random() * 400 - 200 );
     bodies.push( world.CreateBody(b2body) );
 }
 

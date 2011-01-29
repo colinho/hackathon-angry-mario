@@ -385,11 +385,13 @@ function createBall( x, y, size ) {
 
     var num_circles = Math.random() * 10 >> 0;
 
-    graphics.fillStyle = enemyColor;
-    graphics.beginPath();
-    graphics.arc( size * .5, size * .5, size * .5, 0, PI2, true );
-    graphics.closePath();
-    graphics.fill();
+	var image = document.getElementById("peach");
+	graphics.drawImage(image, 0, 0);
+    //graphics.fillStyle = enemyColor;
+    //graphics.beginPath();
+    //graphics.arc( size * .5, size * .5, size * .5, 0, PI2, true );
+    //graphics.closePath();
+    //graphics.fill();
 	
     canvas.appendChild(element);
 
@@ -399,7 +401,7 @@ function createBall( x, y, size ) {
 
     var circle = new b2CircleDef();
     circle.radius = size >> 1;
-    circle.density = 1;
+    circle.density = 0.0001;
     circle.friction = 0.3;
     circle.restitution = 0.3;
     b2body.AddShape(circle);
@@ -480,8 +482,8 @@ function loop() {
 
 		if (dontSpinWhenGrabbedFlag)
 		{
-			if (element.tagName == 'DIV') {
-
+			//if (element.tagName == 'DIV') {
+			{
 				var rotationStyle = 'rotate(' + (body.m_rotation0 * 57.2957795) + 'deg)';
 				element.style.WebkitTransform = rotationStyle;
 				element.style.MozTransform = rotationStyle;

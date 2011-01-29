@@ -17,6 +17,7 @@ var themes = [ [ "#10222B", "#95AB63", "#BDD684", "#E2F0D6", "#F6FFE0" ],
 var theme;
 
 var avatarColor = "#FF3333";
+var avatarBody;
 
 var worldAABB, world, iterations = 1, timeStep = 1 / 20;
 
@@ -105,14 +106,34 @@ function reset() {
 }
 
 //
-
+var avatarMouseDownX;
+var avatarMouseDownY;
 function onDocumentMouseDown() {
+
+	var body = getBodyAtMouse();
+	if (body == avatarBody)
+	{
+		avatarMouseDownX = event.clientX;
+		avatarMouseDownY = event.clientY;
+	}
 
     isMouseDown = true;
     return false;
 }
 
 function onDocumentMouseUp() {
+
+	var body = getBodyAtMouse();
+	if (body == avatarBody)
+	{
+		var hackedForceX = avatarMouseDownX - event.clientX * 10000;
+		var hackedForceY = avatarMouseDownY - event.clientY * 10000;
+		
+		var hackedForce = new b2Vec2(hackedForceX, hackedForceY ); 
+		var bogus = new b2Vec2(avatarMouseDownX, avatarMouseDownY); 
+		body.ApplyImpulse(hackedForce, bogus);
+		//body.WakeUp( );
+	}
 
     isMouseDown = false;
     return false;
@@ -181,7 +202,7 @@ function onDocumentTouchEnd( event ) {
 
 function createAvatar() {
 
-    var size = 100;
+    var size = 50;
 
     var element = document.createElement( 'div' );
     element.width = size;
@@ -210,7 +231,7 @@ function createAvatar() {
 
     text = document.createElement( 'div' );
     text.onSelectStart = null;
-    text.innerHTML = '<span style="color:' + theme[0] + ';font-size:40px;">angry</span>';
+    text.innerHTML = '<span style="color:yellow;font-size:12px;">ANGRY!</span>';
     text.style.color = theme[1];
     text.style.position = 'absolute';
     text.style.left = '0px';
@@ -226,15 +247,17 @@ function createAvatar() {
 
     var circle = new b2CircleDef();
     circle.radius = size / 2;
-    circle.density = 1;
+    circle.density = 0.9;
     circle.friction = 0.3;
     circle.restitution = 0.3;
     b2body.AddShape(circle);
     b2body.userData = {element: element};
 
-    b2body.position.Set( Math.random() * stage[2], Math.random() * -200 );
-    b2body.linearVelocity.Set( Math.random() * 400 - 200, Math.random() * 400 - 200 );
-    bodies.push( world.CreateBody(b2body) );    
+    b2body.position.Set(stage[0] + 250, stage[3] - 250 );
+    //b2body.linearVelocity.Set( Math.random() * 400 - 200, Math.random() * 400 - 200 );
+	avatarBody	= world.CreateBody(b2body);
+    bodies.push(avatarBody ); 
+	// hack -remember the avatar so we can distinguish it in mouse hit tests
 }
 
 function createBall( x, y ) {
@@ -397,26 +420,31 @@ function createBox(world, x, y, width, height, fixed) {
 function mouseDrag()
 {
     // mouse press
-    if (createMode) {
+    if (createMode) 
+	{
 
         createBall( mouseX, mouseY );
 
-    } else if (isMouseDown && !mouseJoint) {
+    } 
+	else if (isMouseDown && !mouseJoint) 
+	{
 
         var body = getBodyAtMouse();
 
         if (body) {
 
-            var md = new b2MouseJointDef();
-            md.body1 = world.m_groundBody;
-            md.body2 = body;
-            md.target.Set(mouseX, mouseY);
-            md.maxForce = 30000 * body.m_mass;
-            md.timeStep = timeStep;
-            mouseJoint = world.CreateJoint(md);
-            body.WakeUp();
+
+				var md = new b2MouseJointDef();
+				md.body1 = world.m_groundBody;
+				md.body2 = body;
+				md.target.Set(mouseX, mouseY);
+				md.maxForce = 30000 * body.m_mass;
+				md.timeStep = timeStep;
+				mouseJoint = world.CreateJoint(md);
+				body.WakeUp();
 
         } else {
+
 
             createMode = false;
 
@@ -424,6 +452,8 @@ function mouseDrag()
 
     }
 
+	
+	
     // mouse release
     if (!isMouseDown) {
 

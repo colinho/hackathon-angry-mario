@@ -16,14 +16,16 @@ var themes = [ [ "#10222B", "#95AB63", "#BDD684", "#E2F0D6", "#F6FFE0" ],
         [ "#333B3A", "#B4BD51", "#543B38", "#61594D", "#B8925A" ] ];
 var theme;
 
+
+var avatarBody;
 var avatarColor = "#FF0000";
 var wallColor = "#BDB76B";
 var enemyColor = "#1E90FF";
 
-var worldAABB, world, iterations = 1, timeStep = 1 / 20;
+var worldAABB, world, iterations = 1, timeStep = 1 / 40;
 
 var walls = [];
-var wall_thickness = 200;
+var wall_thickness = 5000;
 var wallsSetted = false;
 
 var bodies, elements, text;
@@ -39,6 +41,19 @@ var mouseY = 0;
 var PI2 = Math.PI * 2;
 
 var timeOfLastTouch = 0;
+
+// Slinghshot stuff
+var ssX = 150;
+var ssH = 300;
+var ssNearX = ssX + 66;
+var ssNearY; // see reset
+var ssFarX = ssX + 130;
+var ssFarY; // see reset
+var ssMidX; // see reset
+var ssMidY; // see reset
+
+var maxLevel = 2;
+var level = maxLevel;
 
 init();
 play();
@@ -69,7 +84,6 @@ function init() {
     reset();
 }
 
-
 function play() {
 
     setInterval( loop, 1000 / 40 );
@@ -97,20 +111,57 @@ function reset() {
     bodies = [];
     elements = [];
 
-    createAvatar();
+	ssNearY = stage[3] - ssH + 35;
+	ssFarY = stage[3] - ssH + 12;
+	ssMidX = (ssNearX + ssFarX) / 2;
+	ssMidY = (ssNearY + ssFarY) / 2;
 	
+
 	var h = 100;
 	var h2 = 115;
 
     createRect(800 + (50/2), stage[3] - (h2/2), 50,h2);
     createRect(850 + (250/2), stage[3] - (h/2), 250, h);
     createRect(1100 + (50/2), stage[3] - (h2/2), 50, h2);
-    
-    createRect(400 + (50/2), stage[3] - (200/2), 50, 200);
+
+    createAvatar(ssMidX, ssMidY);
+
 	
-	createBall(900, stage[3] - h2);
-	createBall(975, stage[3] - h2);
-	createBall(1050, stage[3] - h2);
+	if (maxLevel < ++level) level = 0;
+	if (level == 0) {
+		var h = 100;
+		var h2 = 90;
+
+		createRect(800 + (50/2), stage[3] - (h2/2), 50, h2);
+		createRect(850 + (250/2), stage[3] - (h/2), 250, h);
+		createRect(1100 + (50/2), stage[3] - (h2/2), 50, h2);
+		
+		createBall(900, stage[3] - h - 50/2);
+		createBall(975, stage[3] - h - 50/2);
+		createBall(1050, stage[3] - h - 50/2);
+	} else if (level == 1) {
+		var h = 100;
+		var h2 = 110;
+
+		createRect(800 + (50/2), stage[3] - (h2/2), 50, h2);
+		createRect(850 + (250/2), stage[3] - (h/2), 250, h);
+		createRect(1100 + (50/2), stage[3] - (h2/2), 50, h2);
+		
+		createBall(900, stage[3] - h - 50/2);
+		createBall(975, stage[3] - h - 50/2);
+		createBall(1050, stage[3] - h - 50/2);
+	} else if (level == 2) {
+		var h = 100;
+		var h2 = 120;
+
+		createRect(800 + (50/2), stage[3] - (h2/2), 50, h2);
+		createRect(850 + (250/2), stage[3] - (h/2), 250, h);
+		createRect(1100 + (50/2), stage[3] - (h2/2), 50, h2);
+		
+		createBall(900, stage[3] - h - 50/2);
+		createBall(975, stage[3] - h - 50/2);
+		createBall(1050, stage[3] - h - 50/2);
+	}
 }
 
 function createSlingshotCanvas() {
@@ -143,24 +194,49 @@ function mouseOverCanvas(event) {
 	
 	graphics.strokeStyle = 'white';
     	graphics.beginPath();
-    	graphics.moveTo(400, 100);
+    	graphics.moveTo(ssNearX, ssNearY);
     	graphics.lineTo(x, y);
     	graphics.stroke();
 
-    	graphics.moveTo(450, 150);
+    	graphics.moveTo(ssFarX, ssFarY);
     	graphics.lineTo(x, y);
     	graphics.stroke();
 }
 
 //
+var avatarMouseDownX;
+var avatarMouseDownY;
+function onDocumentMouseDown(event) {
 
-function onDocumentMouseDown() {
+	var body = getBodyAtMouse();
+	if (body == avatarBody)
+	{
+		dontSpinWhenGrabbedFlag = false;
+		avatarMouseDownX = event.clientX;
+		avatarMouseDownY = event.clientY;
+	}
 
     isMouseDown = true;
     return false;
 }
+var dontSpinWhenGrabbedFlag = false;
+function onDocumentMouseUp(event) {
 
-function onDocumentMouseUp() {
+	var body = getBodyAtMouse();
+	if (body == avatarBody)
+	{
+		dontSpinWhenGrabbedFlag = true;
+		//var hackedForceX = (avatarMouseDownX - event.clientX) * 10000;
+		//var hackedForceY = (avatarMouseDownY - event.clientY) * 10000;
+		//var hackedForce = new b2Vec2(hackedForceX, hackedForceY ); 
+		//var mouseDownPoint = new b2Vec2(avatarMouseDownX, avatarMouseDownY);
+
+		var hackedForceX = (ssMidX - event.clientX) * 5000;
+		var hackedForceY = (ssMidY - event.clientY) * 5000;
+		var hackedForce = new b2Vec2(hackedForceX, hackedForceY ); 
+		var pointOfLaunch = new b2Vec2(ssMidX, ssMidY); 
+		body.ApplyImpulse(hackedForce, pointOfLaunch);
+	}
 
     isMouseDown = false;
     return false;
@@ -227,9 +303,9 @@ function onDocumentTouchEnd( event ) {
 
 //
 
-function createAvatar() {
+function createAvatar( x, y ) {
 
-    var size = 100;
+    var size = 50;
 
     var element = document.createElement( 'div' );
     element.width = size;
@@ -248,17 +324,20 @@ function createAvatar() {
 
     var graphics = circle.getContext( '2d' );
 
-    graphics.fillStyle = avatarColor;
-    graphics.beginPath();
-    graphics.arc( size * .5, size * .5, size * .5, 0, PI2, true );
-    graphics.closePath();
-    graphics.fill();
+	var image = document.getElementById("mario");
+	graphics.drawImage(image, 0, 0);
+    //graphics.fillStyle = avatarColor;
+    //graphics.beginPath();
+    //graphics.arc( size * .5, size * .5, size * .5, 0, PI2, true );
+    //graphics.closePath();
+    //graphics.fill();
 
     element.appendChild( circle );
 
+	/*
     text = document.createElement( 'div' );
     text.onSelectStart = null;
-    text.innerHTML = '<span style="color:' + theme[0] + ';font-size:40px;">angry</span>';
+    text.innerHTML = '<span style="color:yellow;font-size:12px;">ANGRY!</span>';
     text.style.color = theme[1];
     text.style.position = 'absolute';
     text.style.left = '0px';
@@ -269,20 +348,23 @@ function createAvatar() {
 
     text.style.left = ((size - text.clientWidth) / 2) +'px';
     text.style.top = ((size - text.clientHeight) / 2) +'px'; 
+	*/
 
     var b2body = new b2BodyDef();
 
     var circle = new b2CircleDef();
     circle.radius = size / 2;
-    circle.density = 1;
+    circle.density = 0.3;
     circle.friction = 0.3;
     circle.restitution = 0.3;
     b2body.AddShape(circle);
     b2body.userData = {element: element};
 
-    b2body.position.Set( Math.random() * stage[2], Math.random() * -200 );
-    b2body.linearVelocity.Set( Math.random() * 400 - 200, Math.random() * 400 - 200 );
-    bodies.push( world.CreateBody(b2body) );    
+    b2body.position.Set(x, y);
+    //b2body.linearVelocity.Set( Math.random() * 400 - 200, Math.random() * 400 - 200 );
+	avatarBody	= world.CreateBody(b2body);
+    bodies.push(avatarBody ); 
+	// hack -remember the avatar so we can distinguish it in mouse hit tests
 }
 
 function createBall( x, y, size ) {
@@ -396,15 +478,18 @@ function loop() {
         element.style.left = (body.m_position0.x - (element.width >> 1)) + 'px';
         element.style.top = (body.m_position0.y - (element.height >> 1)) + 'px';
 
-//        if (element.tagName == 'DIV') {
+		if (dontSpinWhenGrabbedFlag)
+		{
+			if (element.tagName == 'DIV') {
 
-            var rotationStyle = 'rotate(' + (body.m_rotation0 * 57.2957795) + 'deg)';
-            element.style.WebkitTransform = rotationStyle;
-            element.style.MozTransform = rotationStyle;
-            element.style.OTransform = rotationStyle;
-            // text.style.MsTransform = rotationStyle;
+				var rotationStyle = 'rotate(' + (body.m_rotation0 * 57.2957795) + 'deg)';
+				element.style.WebkitTransform = rotationStyle;
+				element.style.MozTransform = rotationStyle;
+				element.style.OTransform = rotationStyle;
+				// text.style.MsTransform = rotationStyle;
 
-//        }
+			}
+		}
 
     }
 
@@ -442,26 +527,35 @@ function createBox(world, x, y, width, height, fixed) {
 function mouseDrag()
 {
     // mouse press
-    if (createMode) {
+    if (createMode) 
+	{
 
         createBall( mouseX, mouseY );
 
-    } else if (isMouseDown && !mouseJoint) {
+    } 
+	else if (isMouseDown && !mouseJoint) 
+	{
 
         var body = getBodyAtMouse();
 
         if (body) {
 
-            var md = new b2MouseJointDef();
-            md.body1 = world.m_groundBody;
-            md.body2 = body;
-            md.target.Set(mouseX, mouseY);
-            md.maxForce = 30000 * body.m_mass;
-            md.timeStep = timeStep;
-            mouseJoint = world.CreateJoint(md);
-            body.WakeUp();
+			// Checking for only the avatar here, prevents the user from mouse
+			// manipulating the other balls etc
+			if (body == avatarBody) 
+			{
+				var md = new b2MouseJointDef();
+				md.body1 = world.m_groundBody;
+				md.body2 = body;
+				md.target.Set(mouseX, mouseY);
+				md.maxForce = 30000 * body.m_mass;
+				md.timeStep = timeStep;
+				mouseJoint = world.CreateJoint(md);
+				body.WakeUp();
+				}
 
         } else {
+
 
             createMode = false;
 
@@ -469,6 +563,8 @@ function mouseDrag()
 
     }
 
+	
+	
     // mouse release
     if (!isMouseDown) {
 

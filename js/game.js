@@ -16,7 +16,9 @@ var themes = [ [ "#10222B", "#95AB63", "#BDD684", "#E2F0D6", "#F6FFE0" ],
         [ "#333B3A", "#B4BD51", "#543B38", "#61594D", "#B8925A" ] ];
 var theme;
 
-var avatarColor = "#FF3333";
+var avatarColor = "#FF0000";
+var wallColor = "#BDB76B";
+var enemyColor = "#1E90FF";
 
 var worldAABB, world, iterations = 1, timeStep = 1 / 20;
 
@@ -89,19 +91,23 @@ function reset() {
 
     // color theme
     theme = themes[ Math.random() * themes.length >> 0 ];
-    document.body.style[ 'backgroundColor' ] = theme[ 0 ];
+    document.body.style[ 'backgroundColor' ] = "#000000";
 
     bodies = [];
     elements = [];
 
     createAvatar();
+	
+	var h = 80;
+	var h2 = 100;
 
-    for( i = 0; i < 10; i++ ) {
-
-        createRect();
-
-    }
-
+    createRect(500 + (50/2), stage[3] - (h2/2), 50,h2);
+    createRect(550 + (250/2), stage[3] - (h/2), 250, h);
+    createRect(800 + (50/2), stage[3] - (h2/2), 50, h2);
+	
+	createBall(600, stage[3] - h2);
+	createBall(675, stage[3] - h2);
+	createBall(750, stage[3] - h2);
 }
 
 //
@@ -237,12 +243,12 @@ function createAvatar() {
     bodies.push( world.CreateBody(b2body) );    
 }
 
-function createBall( x, y ) {
+function createBall( x, y, size ) {
 
     var x = x || Math.random() * stage[2];
     var y = y || Math.random() * -200;
 
-    var size = (Math.random() * 100 >> 0) + 20;
+    var size = size || 50;
 
     var element = document.createElement("canvas");
     element.width = size;
@@ -255,15 +261,12 @@ function createBall( x, y ) {
 
     var num_circles = Math.random() * 10 >> 0;
 
-    for (var i = size; i > 0; i-= (size/num_circles)) {
-
-        graphics.fillStyle = theme[ (Math.random() * 4 >> 0) + 1];
-        graphics.beginPath();
-        graphics.arc(size * .5, size * .5, i * .5, 0, PI2, true); 
-        graphics.closePath();
-        graphics.fill();
-    }
-
+    graphics.fillStyle = enemyColor;
+    graphics.beginPath();
+    graphics.arc( size * .5, size * .5, size * .5, 0, PI2, true );
+    graphics.closePath();
+    graphics.fill();
+	
     canvas.appendChild(element);
 
     elements.push( element );
@@ -279,7 +282,7 @@ function createBall( x, y ) {
     b2body.userData = {element: element};
 
     b2body.position.Set( x, y );
-    b2body.linearVelocity.Set( Math.random() * 400 - 200, Math.random() * 400 - 200 );
+    //b2body.linearVelocity.Set( Math.random() * 400 - 200, Math.random() * 400 - 200 );
     bodies.push( world.CreateBody(b2body) );
 }
 
@@ -302,7 +305,7 @@ function createRect( x, y, w, h ) {
 
     var num_circles = Math.random() * 10 >> 0;
 
-    graphics.fillStyle = theme[ (Math.random() * 4 >> 0) + 1];
+    graphics.fillStyle = wallColor;
     graphics.fillRect(0, 0, w, h);
 
     canvas.appendChild(element);
@@ -320,7 +323,7 @@ function createRect( x, y, w, h ) {
     b2body.userData = {element: element};
 
     b2body.position.Set( x, y );
-    b2body.linearVelocity.Set( Math.random() * 400 - 200, Math.random() * 400 - 200 );
+    //b2body.linearVelocity.Set( Math.random() * 400 - 200, Math.random() * 400 - 200 );
     bodies.push( world.CreateBody(b2body) );
 }
 

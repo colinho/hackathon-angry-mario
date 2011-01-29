@@ -352,7 +352,7 @@ function createBall( x, y, size ) {
 
     var circle = new b2CircleDef();
     circle.radius = size >> 1;
-    circle.density = 1;
+    circle.density = 0.0001;
     circle.friction = 0.3;
     circle.restitution = 0.3;
     b2body.AddShape(circle);
@@ -433,8 +433,8 @@ function loop() {
 
 		if (dontSpinWhenGrabbedFlag)
 		{
-			if (element.tagName == 'DIV') {
-
+			//if (element.tagName == 'DIV') {
+			{
 				var rotationStyle = 'rotate(' + (body.m_rotation0 * 57.2957795) + 'deg)';
 				element.style.WebkitTransform = rotationStyle;
 				element.style.MozTransform = rotationStyle;

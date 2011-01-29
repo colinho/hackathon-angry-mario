@@ -96,7 +96,7 @@ function reset() {
 
     for( i = 0; i < 10; i++ ) {
 
-        createBall();
+        createSquare();
 
     }
 
@@ -274,6 +274,47 @@ function createBall( x, y ) {
     circle.friction = 0.3;
     circle.restitution = 0.3;
     b2body.AddShape(circle);
+    b2body.userData = {element: element};
+
+    b2body.position.Set( x, y );
+    b2body.linearVelocity.Set( Math.random() * 400 - 200, Math.random() * 400 - 200 );
+    bodies.push( world.CreateBody(b2body) );
+}
+
+function createSquare( x, y, w, h ) {
+
+    var x = x || Math.random() * stage[2];
+    var y = y || Math.random() * -200;
+	
+	var w = w || 50;
+	var h = h || 150;
+
+    var element = document.createElement("canvas");
+    element.width = w;
+    element.height = h;
+    element.style['position'] = 'absolute';
+    element.style['left'] = -200 + 'px';
+    element.style['top'] = -200 + 'px';
+
+    var graphics = element.getContext("2d");
+
+    var num_circles = Math.random() * 10 >> 0;
+
+    graphics.fillStyle = theme[ (Math.random() * 4 >> 0) + 1];
+    graphics.fillRect(0, 0, w, h);
+
+    canvas.appendChild(element);
+
+    elements.push( element );
+
+    var b2body = new b2BodyDef();
+
+    var square = new b2BoxDef();
+	square.extents.Set(w/2, h/2);
+    square.density = 1;
+    square.friction = 0.3;
+    square.restitution = 0.3;
+    b2body.AddShape(square);
     b2body.userData = {element: element};
 
     b2body.position.Set( x, y );

@@ -98,7 +98,7 @@ function reset() {
 
     for( i = 0; i < 10; i++ ) {
 
-        createSquare();
+        createRect();
 
     }
 
@@ -283,12 +283,12 @@ function createBall( x, y ) {
     bodies.push( world.CreateBody(b2body) );
 }
 
-function createSquare( x, y, w, h ) {
+function createRect( x, y, w, h ) {
 
     var x = x || Math.random() * stage[2];
     var y = y || Math.random() * -200;
 	
-	var w = w || 150;
+	var w = w || 50;
 	var h = h || 150;
 
     var element = document.createElement("canvas");

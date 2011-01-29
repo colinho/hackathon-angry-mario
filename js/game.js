@@ -1,3 +1,5 @@
+/* Based on ball_pool/Main.js by mr.doob */
+
 var canvas;
 
 var delta = [ 0, 0 ];

@@ -52,6 +52,9 @@ var ssFarY; // see reset
 var ssMidX; // see reset
 var ssMidY; // see reset
 
+var maxLevel = 2;
+var level = maxLevel;
+
 init();
 play();
 
@@ -114,16 +117,41 @@ function reset() {
 	
     createAvatar(ssMidX, ssMidY);
 	
-	var h = 100;
-	var h2 = 115;
+	if (maxLevel < ++level) level = 0;
+	if (level == 0) {
+		var h = 100;
+		var h2 = 115;
 
-    createRect(800 + (50/2), stage[3] - (h2/2), 50,h2);
-    createRect(850 + (250/2), stage[3] - (h/2), 250, h);
-    createRect(1100 + (50/2), stage[3] - (h2/2), 50, h2);
-	
-	createBall(900, stage[3] - h2);
-	createBall(975, stage[3] - h2);
-	createBall(1050, stage[3] - h2);
+		createRect(800 + (50/2), stage[3] - (h2/2), 50, h2);
+		createRect(850 + (250/2), stage[3] - (h/2), 250, h);
+		createRect(1100 + (50/2), stage[3] - (h2/2), 50, h2);
+		
+		createBall(900, stage[3] - h - 50/2);
+		createBall(975, stage[3] - h - 50/2);
+		createBall(1050, stage[3] - h - 50/2);
+	} else if (level == 1) {
+		var h = 100;
+		var h2 = 120;
+
+		createRect(800 + (50/2), stage[3] - (h2/2), 50, h2);
+		createRect(850 + (250/2), stage[3] - (h/2), 250, h);
+		createRect(1100 + (50/2), stage[3] - (h2/2), 50, h2);
+		
+		createBall(900, stage[3] - h - 50/2);
+		createBall(975, stage[3] - h - 50/2);
+		createBall(1050, stage[3] - h - 50/2);
+	} else if (level == 2) {
+		var h = 100;
+		var h2 = 125;
+
+		createRect(800 + (50/2), stage[3] - (h2/2), 50, h2);
+		createRect(850 + (250/2), stage[3] - (h/2), 250, h);
+		createRect(1100 + (50/2), stage[3] - (h2/2), 50, h2);
+		
+		createBall(900, stage[3] - h - 50/2);
+		createBall(975, stage[3] - h - 50/2);
+		createBall(1050, stage[3] - h - 50/2);
+	}
 }
 
 //

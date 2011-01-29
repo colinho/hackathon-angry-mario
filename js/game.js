@@ -19,7 +19,7 @@ var theme;
 
 var avatarBody;
 var avatarColor = "#FF0000";
-var wallColor = "#BDB76B";
+var wallColor = "#228B22";
 var enemyColor = "#1E90FF";
 
 var worldAABB, world, iterations = 1, timeStep = 1 / 40;

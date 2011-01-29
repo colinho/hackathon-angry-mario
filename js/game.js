@@ -286,7 +286,7 @@ function createSquare( x, y, w, h ) {
     var x = x || Math.random() * stage[2];
     var y = y || Math.random() * -200;
 	
-	var w = w || 50;
+	var w = w || 150;
 	var h = h || 150;
 
     var element = document.createElement("canvas");
@@ -349,15 +349,15 @@ function loop() {
         element.style.left = (body.m_position0.x - (element.width >> 1)) + 'px';
         element.style.top = (body.m_position0.y - (element.height >> 1)) + 'px';
 
-        if (element.tagName == 'DIV') {
+//        if (element.tagName == 'DIV') {
 
             var rotationStyle = 'rotate(' + (body.m_rotation0 * 57.2957795) + 'deg)';
-            text.style.WebkitTransform = rotationStyle;
-            text.style.MozTransform = rotationStyle;
-            text.style.OTransform = rotationStyle;
+            element.style.WebkitTransform = rotationStyle;
+            element.style.MozTransform = rotationStyle;
+            element.style.OTransform = rotationStyle;
             // text.style.MsTransform = rotationStyle;
 
-        }
+//        }
 
     }
 

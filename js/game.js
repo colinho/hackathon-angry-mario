@@ -171,7 +171,7 @@ function createSlingshotCanvas() {
     element.height = stage[3];
 //    element.style['bottom'] = '0px';
     element.style['position'] = 'absolute';
-    element.style['z-index'] = -5;
+    element.style['z-index'] = -65445;
 //    element.style['left'] = -200 + 'px';
 //    element.style['top'] = -200 + 'px';
 

@@ -375,7 +375,7 @@ function mouseDrag()
 
         } else {
 
-            createMode = true;
+            createMode = false;
 
         }
 

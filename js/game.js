@@ -80,7 +80,7 @@ function init() {
     world = new b2World( worldAABB, new b2Vec2( 0, 0 ), true );
 
     setWalls();
-    createSlingshotCanvas();
+//    createSlingshotCanvas();
     reset();
 }
 
@@ -167,11 +167,11 @@ function reset() {
 function createSlingshotCanvas() {
     var element = document.createElement("canvas");
     element.setAttribute("id", "slingshot-canvas");
-    element.width = stage[2];
+    element.width = stage[2]/3;
     element.height = stage[3];
 //    element.style['bottom'] = '0px';
     element.style['position'] = 'absolute';
-    element.style['z-index'] = -65445;
+    element.style['z-index'] = -6;
 //    element.style['left'] = -200 + 'px';
 //    element.style['top'] = -200 + 'px';
 

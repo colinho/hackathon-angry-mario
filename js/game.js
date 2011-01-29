@@ -120,7 +120,7 @@ function reset() {
 	if (maxLevel < ++level) level = 0;
 	if (level == 0) {
 		var h = 100;
-		var h2 = 115;
+		var h2 = 90;
 
 		createRect(800 + (50/2), stage[3] - (h2/2), 50, h2);
 		createRect(850 + (250/2), stage[3] - (h/2), 250, h);
@@ -131,7 +131,7 @@ function reset() {
 		createBall(1050, stage[3] - h - 50/2);
 	} else if (level == 1) {
 		var h = 100;
-		var h2 = 120;
+		var h2 = 110;
 
 		createRect(800 + (50/2), stage[3] - (h2/2), 50, h2);
 		createRect(850 + (250/2), stage[3] - (h/2), 250, h);
@@ -142,7 +142,7 @@ function reset() {
 		createBall(1050, stage[3] - h - 50/2);
 	} else if (level == 2) {
 		var h = 100;
-		var h2 = 125;
+		var h2 = 120;
 
 		createRect(800 + (50/2), stage[3] - (h2/2), 50, h2);
 		createRect(850 + (250/2), stage[3] - (h/2), 250, h);
@@ -423,7 +423,7 @@ function loop() {
         element.style.left = (body.m_position0.x - (element.width >> 1)) + 'px';
         element.style.top = (body.m_position0.y - (element.height >> 1)) + 'px';
 
-//        if (element.tagName == 'DIV') {
+        if (element.tagName != 'DIV') {
 
             var rotationStyle = 'rotate(' + (body.m_rotation0 * 57.2957795) + 'deg)';
             element.style.WebkitTransform = rotationStyle;
@@ -431,7 +431,7 @@ function loop() {
             element.style.OTransform = rotationStyle;
             // text.style.MsTransform = rotationStyle;
 
-//        }
+        }
 
     }
 
